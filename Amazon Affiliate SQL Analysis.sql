@@ -40,6 +40,7 @@ like user_behavior;
 insert user_stagging select * from user_behavior;
 select * from user_stagging;
 
+
 -- Data Check and Data cleaning 
 
 -- Clicks Table 
@@ -91,14 +92,11 @@ select * from conversions_stagging;
 
 
 -- Checking for duplicates in conversion stagging table
+
 select *, row_number() over(partition by conversion_id) as rn 
-from conversions_stagging; -- No dupes found
+from conversions_stagging; -- No duplicates found
 
--- products stagging
-select * from products_stagging;
-desc products_stagging;
-
--- Converting release date type from string to date type 
+-- Converting 'release date' type from string to date type 
 
 alter table products_stagging
 add column new_release_date date;
@@ -125,7 +123,9 @@ select * from user_stagging;
 -- Checking duplicates
 select *, row_number() over(partition by session_id) as rn from user_stagging;
 
--- Analysis 
+--------------------------------------------------------------------------------------------------------------------------
+
+-- Data Analysis 
 
 -- Business Problem 1 - Unclear Revenue Drivers 
 
@@ -137,8 +137,7 @@ select * from conversions_stagging where product_title = "Dyson V8 Cordless Vacu
 select product_title, round(sum(commission_earned),2) as total_commission, count(*) as num_of_conversions
 from conversions_stagging group by product_title order by total_commission desc;
 
--- Question 2: Which product categories are the top and bottom performers based on 
--- total affiliate revenue and average commission per conversion?
+-- Question 2: Which product categories are the top and bottom performers based on total affiliate revenue and average commission per conversion?
 
 select product_category, round(sum(commission_earned),2) as revenue 
 from conversions_stagging group by product_category order by revenue desc;
@@ -172,29 +171,6 @@ group by c.product_asin, c.product_title
 order by no_of_clicks desc;
 
 
-Select 
-c.product_category,
-c.product_title, 
-count(distinct c.click_id) as no_of_clicks, 
-count(distinct co.conversion_id) as no_of_conversions,
-round(sum(commission_earned),1) as revenue
-from clicks_stagging c left join conversions_stagging co on c.user_id = co.user_id and co.is_attributed_click = 1 
-group by c.product_title, c.product_category having c.product_category = 'Electronics'
-order by no_of_clicks desc;
-
-Select 
-c.product_category,
-c.product_asin, 
-c.product_title, 
-count(distinct c.click_id) as no_of_clicks, 
-count(distinct co.conversion_id) as no_of_conversions,
-round(sum(commission_earned),1) as revenue
-from clicks_stagging c left join conversions_stagging co on c.click_id = co.click_id and co.is_attributed_click = 1 
-WHERE c.product_category = 'Electronics'
-group by c.product_asin, c.product_title, c.product_category
-order by no_of_clicks desc;
-
-
 with cte as (
 Select 
 c.product_category,
@@ -214,8 +190,7 @@ from cte group by cte.product_category order by total_clicks desc;
 
 -- Business Problem 2: Conversion Funnel Drop-Off 
 
--- Question 1: How does time spent on page before clicking an affiliate link vary by product category, 
--- and which categories show high engagement but low conversion rates?
+-- Question 1: How does time spent on page before clicking an affiliate link vary by product category and which categories show high engagement but low conversion rates?
 
 Select c.product_category, round(avg(c.time_on_page_before_click),1) as avg_time_before_click, 
 round(avg(u.user_engagement_score),1) as avg_engagement_score,
@@ -226,23 +201,35 @@ group by product_category
 order by avg_time_before_click desc;
 
 -- Do product categories with longer pre-click engagement convert more effectively, or does extended time indicate purchase friction?
-Select c.product_category, round(avg(c.time_on_page_before_click),1) as avg_time_before_click,
-round(count(distinct co.conversion_id)/count(distinct c.click_id)*100,1) as conversion_rate
-from clicks_stagging c left join conversions_stagging co on c.click_id = co.click_id
+
+Select c.product_category, 
+	round(avg(c.time_on_page_before_click),1) as avg_time_before_click,
+	round(count(distinct co.conversion_id)/count(distinct c.click_id)*100,1) as conversion_rate
+from clicks_stagging c 
+left join conversions_stagging co 
+on c.click_id = co.click_id
 group by product_category
 order by conversion_rate;
 
 -- What is the average time on page before clicking for users whose clicks eventually converted?
-Select co.product_category, round(avg(c.time_on_page_before_click),1) as avg_time_before_click, count(co.conversion_id) as no_of_conversions 
-from conversions_stagging co inner join clicks_stagging c on co.click_id = c.click_id
+
+Select co.product_category, 
+	round(avg(c.time_on_page_before_click),1) as avg_time_before_click, 
+	count(co.conversion_id) as no_of_conversions 
+from conversions_stagging co 
+inner join clicks_stagging c 
+on co.click_id = c.click_id
 group by product_category
 order by avg_time_before_click desc;
 
 -- How much time before the click does the user take for each product category and how does it compare to commission per conversion.
-Select co.product_category, round(avg(c.time_on_page_before_click),1) as avg_time_before_click,
-round(avg(commission_earned),1) as avg_commission_per_conversion, 
-COUNT(DISTINCT co.conversion_id) AS conversions
-from conversions_stagging co inner join clicks_stagging c on co.click_id = c.click_id
+
+Select co.product_category, 
+	round(avg(c.time_on_page_before_click),1) as avg_time_before_click,
+	round(avg(commission_earned),1) as avg_commission_per_conversion, 
+	COUNT(DISTINCT co.conversion_id) AS conversions
+from conversions_stagging co 
+inner join clicks_stagging c on co.click_id = c.click_id
 group by product_category
 order by avg_time_before_click desc;
 
@@ -273,115 +260,148 @@ ORDER BY total_commission desc;
 -- How do conversion rates differ between new and returning users?
 
 select 
-new_vs_returning,
-round(count(distinct co.conversion_id)/count(distinct c.click_id) *100,1) as conversion_rate
-from clicks_stagging c left join conversions_stagging co on c.click_id = co.click_id
+	new_vs_returning,
+	round(count(distinct co.conversion_id)/count(distinct c.click_id) *100,1) as conversion_rate
+from clicks_stagging c 
+left join conversions_stagging co on c.click_id = co.click_id
 join user_stagging u on u.user_id = c.user_id 
 group by new_vs_returning;
 
 -- Do discounts have a greater impact on conversion rates for new users compared to returning users?
 
 Select 
-new_vs_returning,
-case when discount_percentage > 0 then 'Discount'
-else 'No Discount' end as discount_flag,
-round(count(distinct co.conversion_id)/count(distinct c.click_id)*100,1) as conversion_rate 
+	new_vs_returning,
+case when 
+		discount_percentage > 0 then 'Discount'
+		else 'No Discount' end as discount_flag,
+	round(count(distinct co.conversion_id)/count(distinct c.click_id)*100,1) as conversion_rate 
 from clicks_stagging c 
 left join conversions_stagging co on c.click_id = co.click_id 
 left join products_stagging p on p.product_asin = c.product_asin and p.product_title = c.product_title
 join user_stagging u on c.user_id = u.user_id
-group by new_vs_returning, discount_flag
-order by new_vs_returning, discount_flag;
+group by 
+	new_vs_returning, 
+	discount_flag
+order by 
+	new_vs_returning, 
+	discount_flag;
 
 -- How do product ratings and review counts influence conversion likelihood?
 
-select c.product_asin, c.product_title, round(max(rating),1) as avg_rating, 
-round(max(review_count),1) as no_of_reviews, 
-round(count(co.conversion_id)/count(c.click_id)*100,1) as conversion_rate
-from clicks_stagging c left join conversions_stagging co on c.click_id = co.click_id
+select 
+	c.product_asin, 
+	c.product_title, 
+	round(max(rating),1) as avg_rating, 
+	round(max(review_count),1) as no_of_reviews, 
+	round(count(co.conversion_id)/count(c.click_id)*100,1) as conversion_rate
+from clicks_stagging c 
+left join conversions_stagging co on c.click_id = co.click_id
 join products_stagging p on c.product_asin = p.product_asin and c.product_title = p.product_title
-group by c.product_asin, c.product_title
+group by 
+	c.product_asin, 
+	c.product_title
 order by conversion_rate desc;
 
 
 -- How do conversion rates and engagement metrics differ across device types?
 
-select * from user_stagging;
-
 select
-u.device_type,
-round(avg(time_on_page_seconds),1) as avg_time_on_page,
-round(avg(session_duration_minutes),1) as avg_session_min,
-round(avg(page_views_in_session),0) as avg_page_views_in_session,
-round(avg(user_engagement_score),1) as avg_eng_score,
-round(count(distinct co.conversion_id)/count(distinct c.click_id)*100,1) as conversion_rate
-from clicks_stagging c left join conversions_stagging co on c.click_id = co.click_id 
+	u.device_type,
+	round(avg(time_on_page_seconds),1) as avg_time_on_page,
+	round(avg(session_duration_minutes),1) as avg_session_min,
+	round(avg(page_views_in_session),0) as avg_page_views_in_session,
+	round(avg(user_engagement_score),1) as avg_eng_score,
+	round(count(distinct co.conversion_id)/count(distinct c.click_id)*100,1) as conversion_rate
+from clicks_stagging c 
+left join conversions_stagging co on c.click_id = co.click_id 
 join user_stagging u on c.user_id = u.user_id
 group by u.device_type
 order by conversion_rate desc;
 
 -- Business Problem 3: Traffic Source Effectiveness
 
--- How do traffic sources compare in terms of conversion volume, conversion rate, 
--- and total commission earned? Identify sources with:
+-- How do traffic sources compare in terms of conversion volume, conversion rate and total commission earned? Identify sources with:
 -- • High traffic but low commission efficiency
 -- • Low traffic but high commission per conversion
 
 select 
-u.traffic_source,
-count(distinct co.conversion_id) as no_of_conversions,
-round(count(distinct co.conversion_id)/count(distinct c.click_id)*100,1) as conversion_rate,
-round(sum(co.commission_earned),1) as total_commission_earned
-from clicks_stagging c left join conversions_stagging co on c.click_id = co.click_id
+	u.traffic_source,
+	count(distinct co.conversion_id) as no_of_conversions,
+	round(count(distinct co.conversion_id)/count(distinct c.click_id)*100,1) as conversion_rate,
+	round(sum(co.commission_earned),1) as total_commission_earned
+from clicks_stagging c 
+left join conversions_stagging co on c.click_id = co.click_id
 join user_stagging u on u.user_id = c.user_id
 group by u.traffic_source
 order by 2 desc;
 
--- How does user composition (new vs returning users) vary across traffic sources, 
--- and how does this impact conversion performance?
+-- How does user composition (new vs returning users) vary across traffic sources and how does this impact conversion performance?
 
 Select 
-u.new_vs_returning,
-u.traffic_source,
-round(count(distinct co.conversion_id)/count(distinct c.click_id)*100,1) as conversion_rate
-from clicks_stagging c left join conversions_stagging co on c.click_id =co.click_id
+	u.new_vs_returning,
+	u.traffic_source,
+	round(count(distinct co.conversion_id)/count(distinct c.click_id)*100,1) as conversion_rate
+from clicks_stagging c 
+left join conversions_stagging co on c.click_id =co.click_id
 join user_stagging u on c.user_id = u.user_id
-group by u.new_vs_returning, u.traffic_source;
+group by 
+	u.new_vs_returning, 
+	u.traffic_source;
 
 
-with cte as (Select 
-u.new_vs_returning,
-u.traffic_source,
-round(count(distinct co.conversion_id)/count(distinct c.click_id)*100,1) as conversion_rate
-from clicks_stagging c left join conversions_stagging co on c.click_id =co.click_id
-join user_stagging u on c.user_id = u.user_id
-group by u.new_vs_returning, u.traffic_source) 
-select count(new_vs_returning) as new_customer, traffic_source from user_stagging
-where new_vs_returning = 'New' group by traffic_source
+with cte as 
+	(
+	Select 
+		u.new_vs_returning,
+		u.traffic_source,
+		round(count(distinct co.conversion_id)/count(distinct c.click_id)*100,1) as conversion_rate
+	from clicks_stagging c 
+	left join conversions_stagging co on c.click_id =co.click_id
+	join user_stagging u on c.user_id = u.user_id
+	group by 
+		u.new_vs_returning, 
+		u.traffic_source
+	) 
+select 
+	count(new_vs_returning) as new_customer, 
+	traffic_source 
+from user_stagging
+where new_vs_returning = 'New' 
+group by traffic_source
 order by 1 desc;
 
-with cte as (Select 
-u.new_vs_returning,
-u.traffic_source,
-round(count(distinct co.conversion_id)/count(distinct c.click_id)*100,1) as conversion_rate
-from clicks_stagging c left join conversions_stagging co on c.click_id =co.click_id
-join user_stagging u on c.user_id = u.user_id
-group by u.new_vs_returning, u.traffic_source) 
-select count(new_vs_returning) as returning_customer,
-traffic_source from user_stagging
-where new_vs_returning = 'Returning' group by traffic_source
+with cte as 
+	(
+	Select 
+		u.new_vs_returning,
+		u.traffic_source,
+		round(count(distinct co.conversion_id)/count(distinct c.click_id)*100,1) as conversion_rate
+	from clicks_stagging c 
+	left join conversions_stagging co on c.click_id =co.click_id
+	join user_stagging u on c.user_id = u.user_id
+	group by 
+		u.new_vs_returning, 
+		u.traffic_source
+	) 
+select 
+	count(new_vs_returning) as returning_customer,
+	traffic_source 
+from user_stagging
+where new_vs_returning = 'Returning' 
+group by traffic_source
 order by 1 desc;
 
 -- How do engagement metrics (time on page, scroll depth, engagement score) differ by traffic source, 
 -- and which sources drive high engagement but low conversions?
 
 select 
-u.traffic_source, 
-round(avg(u.time_on_page_seconds),1) as avg_time_on_page,
-round(avg(c.page_scroll_depth),1) as avg_page_scroll_depth,
-round(avg(u.user_engagement_score),1) as avg_eng_score,
-round(count(distinct co.conversion_id)/count(distinct c.click_id)*100,1) as conversion_rate
-from clicks_stagging c left join conversions_stagging co on c.click_id = co.click_id
+	u.traffic_source, 
+	round(avg(u.time_on_page_seconds),1) as avg_time_on_page,
+	round(avg(c.page_scroll_depth),1) as avg_page_scroll_depth,
+	round(avg(u.user_engagement_score),1) as avg_eng_score,
+	round(count(distinct co.conversion_id)/count(distinct c.click_id)*100,1) as conversion_rate
+from clicks_stagging c 
+left join conversions_stagging co on c.click_id = co.click_id
 join user_stagging u on u.user_id = c.user_id
 group by u.traffic_source
 order by avg_eng_score;
@@ -390,9 +410,10 @@ order by avg_eng_score;
 -- Which traffic sources drive the highest average commission per conversion, indicating higher-quality traffic?
 
 select 
-u.traffic_source, 
-round(avg(co.commission_earned),2) as commision_per_conversion
-from conversions_stagging co join user_stagging u on co.user_id = u.user_id
+	u.traffic_source, 
+	round(avg(co.commission_earned),2) as commision_per_conversion
+from conversions_stagging co 
+join user_stagging u on co.user_id = u.user_id
 where co.is_attributed_click = 1
 group by u.traffic_source
 order by commision_per_conversion desc;
@@ -400,8 +421,7 @@ order by commision_per_conversion desc;
 
 
 -- Business Problem 4:
--- User behaviour differs across devices and regions, 
--- but we do not know how this affects engagement and conversion outcomes.
+-- User behaviour differs across devices and regions, but we do not know how this affects engagement and conversion outcomes.
 
 
 -- Business Question 1
@@ -420,23 +440,27 @@ LEFT JOIN conversions_stagging co
 GROUP BY c.country
 ORDER BY total_aff_rev DESC;
 
--- Are there specific countries or devices that show high engagement but low conversion 
--- or commission, indicating potential UX or localisation issues?
+-- Are there specific countries or devices that show high engagement but low conversion or commission, indicating potential UX or localisation issues?
 
-select a.country, a.total_aff_com from (select 
-c.country, 
-round(avg(u.user_engagement_score),1) as avg_eng_score,
-round(count(distinct case when co.conversion_id is not null then c.click_id end)/count(distinct c.click_id)*100,1) as conversion_rate,
-round(sum(co.commission_earned),1) as total_aff_com
-from clicks_stagging c left join conversions_stagging co on c.click_id = co.click_id
-join user_stagging u on c.user_id = u.user_id
-group by c.country
-order by avg_eng_score desc) a
+select 
+	a.country, 
+	a.total_aff_com 
+from 
+		(select 
+			c.country, 
+			round(avg(u.user_engagement_score),1) as avg_eng_score,
+			round(count(distinct case when co.conversion_id is not null then c.click_id end)/count(distinct c.click_id)*100,1) as conversion_rate,
+			round(sum(co.commission_earned),1) as total_aff_com
+		from clicks_stagging c 
+		left join conversions_stagging co on c.click_id = co.click_id
+		join user_stagging u on c.user_id = u.user_id
+		group by c.country
+		order by avg_eng_score desc) a
 ;
 
 WITH user_clean AS (
-SELECT user_id,
-AVG(user_engagement_score) AS engagement
+SELECT 	user_id,
+		AVG(user_engagement_score) AS engagement
 FROM user_stagging
 GROUP BY user_id
 )
@@ -468,18 +492,20 @@ HAVING COUNT(*) > 1;
 
 
 select 
-u.geographic_location,
-u.device_type, 
-round(avg(u.user_engagement_score),1) as avg_eng_score,
-round(count(distinct case when co.conversion_id is not null then c.click_id end)/count(distinct c.click_id)*100,1) as conversion_rate,
-round(sum(co.commission_earned),1) as total_aff_com
-from clicks_stagging c left join conversions_stagging co on c.click_id = co.click_id
+	u.geographic_location,
+	u.device_type, 
+	round(avg(u.user_engagement_score),1) as avg_eng_score,
+	round(count(distinct case when co.conversion_id is not null then c.click_id end)/count(distinct c.click_id)*100,1) as conversion_rate,
+	round(sum(co.commission_earned),1) as total_aff_com
+from clicks_stagging c 
+left join conversions_stagging co on c.click_id = co.click_id
 join user_stagging u on c.user_id = u.user_id
-group by u.device_type, u.geographic_location
+group by 
+	u.device_type, 
+	u.geographic_location
 order by avg_eng_score desc;
 
--- How are users distributed across conversion funnel stages (Awareness, Interest, Consideration, Action) 
--- by device type, and which devices show the highest concentration at non-conversion stages?
+-- How are users distributed across conversion funnel stages (Awareness, Interest, Consideration, Action) by device type, and which devices show the highest concentration at non-conversion stages?
 
 -- Conversion Funnel Distribution w/o device types
 SELECT
@@ -514,8 +540,7 @@ GROUP BY device_type, conversion_funnel_stage
 ORDER BY device_type, stage_rank;
 
 -- Business problem 5: Customer Value & Retention
--- We lack clarity on whether new or returning users provide higher long-term value 
--- through affiliate conversions.
+-- We lack clarity on whether new or returning users provide higher long-term value through affiliate conversions.
 
 -- Business Question 1: 
 -- What is the difference in customer lifetime value (CLV) between new and returning users?
@@ -558,90 +583,117 @@ LEFT JOIN conversions_stagging co
 GROUP BY u.new_vs_returning
 ORDER BY total_comm_rev desc;
 
-WITH cte as (select distinct user_id, new_vs_returning from user_stagging)
-select new_vs_returning, count(*) from cte group by new_vs_returning;
+
+WITH cte as 
+	(
+		select 
+			distinct user_id, 
+			new_vs_returning 
+	from user_stagging
+	)
+select 
+new_vs_returning, 
+count(*) 
+from cte 
+group by new_vs_returning;
 
 
 -- Which traffic sources attract higher-value returning users?
 
 select 
-u.traffic_source,
-u.new_vs_returning,
-round(avg(co.customer_lifetime_value),1) as avg_clv,
-round(avg(co.commission_earned),1) as avg_commission
-from conversions_stagging co join user_stagging u on u.user_id = co.user_id
-group by u.traffic_source, u.new_vs_returning
+	u.traffic_source,
+	u.new_vs_returning,
+	round(avg(co.customer_lifetime_value),1) as avg_clv,
+	round(avg(co.commission_earned),1) as avg_commission
+from conversions_stagging co 
+join user_stagging u on u.user_id = co.user_id
+group by 
+	u.traffic_source, 
+	u.new_vs_returning
 having u.new_vs_returning = 'Returning'
 order by 3 desc;
 
 -- Business Problem 6
--- Product price, discounts, and ratings vary significantly, but we do not know how these factors 
--- influence conversion likelihood and commission earned.
+-- Product price, discounts, and ratings vary significantly, but we do not know how these factors influence conversion likelihood and commission earned.
 
 
 -- Is there a threshold where higher discounts stop improving conversion performance?
 
-select min(discount_percentage), max(discount_percentage) from products_stagging;
+select 
+	min(discount_percentage), 
+	max(discount_percentage) 
+from products_stagging;
 
 select 
-case when p.discount_percentage between 1 and 10 then 'Low Discount %'
-when p.discount_percentage between 11 and 20 then 'Mid Discounts %'
-when p.discount_percentage between 21 and 32 then 'High Discount %' 
-else 'No Discount' end as discount_treshold,
-round(count( distinct co.conversion_id)/count(distinct c.click_id) *100,1) as conversion_rate,
-round(sum(co.commission_earned),1) as total_commission_earned
-from clicks_stagging c left join conversions_stagging co on c.click_id = co.click_id
+	case 
+		when 
+		p.discount_percentage between 1 and 10 then 'Low Discount %'
+		when 
+		p.discount_percentage between 11 and 20 then 'Mid Discounts %'
+		when 
+		p.discount_percentage between 21 and 32 then 'High Discount %' 
+		else 'No Discount' 
+	end as discount_treshold,
+	round(count( distinct co.conversion_id)/count(distinct c.click_id) *100,1) as conversion_rate,
+	round(sum(co.commission_earned),1) as total_commission_earned
+from clicks_stagging c 
+left join conversions_stagging co on c.click_id = co.click_id
 join products_stagging p on p.product_asin = c.product_asin and p.product_title = c.product_title
 group by discount_treshold;
 
 -- How do product ratings and review counts differ between converted and non-converted products?
 
-select * from products_stagging where product_title like 'anova%';
-
 select 
-c.product_asin,
-c.product_title,
-max(rating) as rating,
-max(review_count) as review_count,
-round(count( distinct co.conversion_id)/count( distinct c.click_id) *100) as conversion_rate
-from clicks_stagging c left join conversions_stagging co on c.click_id =co.click_id
+	c.product_asin,
+	c.product_title,
+	max(rating) as rating,
+	max(review_count) as review_count,
+	round(count( distinct co.conversion_id)/count( distinct c.click_id) *100) as conversion_rate
+from clicks_stagging c 
+left join conversions_stagging co on c.click_id =co.click_id
 join products_stagging p on c.product_asin = p.product_asin and c.product_title = p.product_title
-group by c.product_title, c.product_asin
+group by 
+	c.product_title, 
+	c.product_asin
 order by 3 desc;
 
 -- Do higher-rated products consistently generate higher commission revenue?
 
-select co.product_asin, 
-co.product_title, 
-max(p.rating) as rating,
-round(sum(commission_earned),1) as total_comm from conversions_stagging co 
+select 
+	co.product_asin, 
+	co.product_title, 
+	max(p.rating) as rating,
+	round(sum(commission_earned),1) as total_comm from conversions_stagging co 
 join products_stagging p on p.product_asin = co.product_asin and p.product_title = co.product_title
-group by co.product_asin, co.product_title
+group by 
+	co.product_asin, 
+	co.product_title
 order by 4 desc;
 
 
 -- Further analysis 
 
-select c.product_category, round(avg(u.session_duration_minutes),1) as avg_session, max(u.session_duration_minutes) as max
+-- What product category has the highest session time on the website. What's the gap between the average and maximum session time?
+
+select 
+	c.product_category, 
+	round(avg(u.session_duration_minutes),1) as avg_session, 
+	max(u.session_duration_minutes) as highest_duration_session
 from clicks_stagging c left join user_stagging u on u.user_id = c.user_id 
 group by c.product_category order by avg_session desc;
 
-select c.product_category, 
-round(count(distinct co.conversion_id)/count(distinct c.click_id)*100,1) as conversion_rate,
-count(distinct co.conversion_id) as no_of_conversions
-from clicks_stagging c left join conversions_stagging co on c.click_id = co.click_id 
-group by c.product_category order by no_of_conversions desc;
+-- Which product categories have the highest number of conversions and conversion rate?
 
+select 
+	c.product_category, 
+	round(count(distinct co.conversion_id)/count(distinct c.click_id)*100,1) as conversion_rate,
+	count(distinct co.conversion_id) as no_of_conversions
+from clicks_stagging c 
+left join conversions_stagging co on c.click_id = co.click_id 
+group by c.product_category 
+order by no_of_conversions desc;
 
-
-
-SELECT 
-    page_type, 
-    new_vs_returning,
-    ROUND(AVG(session_duration_minutes) OVER(PARTITION BY page_type), 1) AS avg_session
-FROM user_stagging
-ORDER BY avg_session DESC;
-
+-- What are ratings for products and thier category ratings?
 
 select product_title, 
 category,
@@ -650,7 +702,7 @@ round(avg(rating) over(partition by category),1) as category_avg
 from products_stagging;
 
 
-use amazon_affiliate;
+-- How many conversions do discount and non discount products have?
 
 select 
 case when discount_percentage > 1 then 'Discount' else 'No Discount'end as discount_flag,

@@ -72,7 +72,7 @@ These tables were joined via user_id, click_id, and a composite key of product_a
 
 <img width="940" height="638" alt="image" src="https://github.com/user-attachments/assets/c9713a6f-cf32-42ec-868e-16488beeb47d" />
 
-
+  
 
 **📊 Dashboard Overview & Key Insights**
 

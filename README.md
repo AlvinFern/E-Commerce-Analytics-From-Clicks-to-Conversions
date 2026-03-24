@@ -40,10 +40,14 @@ Customer Value & Retention — Do new or returning users deliver more long-term 
 **📝 Executive Summary**
 
 The analysis examined Aventra Commerce's affiliate performance across markets, traffic sources, user behaviour, and pricing strategies to surface the key levers for revenue growth.
+
 Canada ($297) and the United States ($275) are the dominant revenue-generating markets, while Germany and Australia present high-growth potential — Germany holds the highest Average Order Value ($259) and engagement score (8.7), despite its small user base.
+
 From a channel perspective, Organic Search delivers a 100% conversion rate among traffic sources, indicating strong purchase intent from users who actively seek the platform. Social Media attracts the largest user volume and maintains an 87% conversion rate, making it the single most impactful acquisition channel. Streaming platforms underperform significantly at a 50% conversion rate.
 On user behaviour, mobile drives the highest awareness but suffers the largest funnel drop-off — only 13% of mobile users reach the action stage, compared to 27% on tablet and 25% on desktop. This signals a UX friction problem rather than a demand problem.
+
 On pricing, moderate discounts of 10–20% generate the highest total commission ($316), while high discounts ($209) boost conversion volume but erode profitability. 68% of all conversions involved a discounted product.
+
 The clearest opportunity for Aventra Commerce lies in fixing the mobile experience, doubling down on organic and social channels, expanding targeted marketing in Germany and Australia, and applying a disciplined discount strategy.
 
 **🛠 Tools & Software**

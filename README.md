@@ -11,13 +11,18 @@ Tools & Software
 Data Model — ERD Diagram
 
 Dashboard Overview & Key Insights
+
 Recommendations
+
 Limitations & Assumptions
+
 Next Steps
+
 
 🧩 Business Problem
 Aventra Commerce is a mid-sized e-commerce marketplace that earns revenue through affiliate commissions across product categories including electronics, kitchen appliances, and home goods. Despite attracting meaningful traffic across social media, organic search, and referral platforms, the business was experiencing inconsistent conversion performance and uneven revenue contribution across markets, devices, and traffic sources.
 Four core challenges were identified:
+
 
 | Challenge | Business Risk |
 | --- | --- |
@@ -25,6 +30,7 @@ Four core challenges were identified:
 | Certain markets show strong engagement but weak revenue contribution | Growth opportunities left untapped | 
 | Effectiveness of discount strategies and pricing tiers is unclear | Profitability leakage | 
 | Some traffic sources drive high engagement but low ROI | Misallocated marketing spend | 
+
 
 The analytics team was engaged to answer five key business question areas:
 

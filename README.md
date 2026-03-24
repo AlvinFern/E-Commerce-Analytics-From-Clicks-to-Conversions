@@ -19,7 +19,8 @@ Limitations & Assumptions
 Next Steps
 
 
-🧩 Business Problem
+**🧩 Business Problem**
+
 Aventra Commerce is a mid-sized e-commerce marketplace that earns revenue through affiliate commissions across product categories including electronics, kitchen appliances, and home goods. Despite attracting meaningful traffic across social media, organic search, and referral platforms, the business was experiencing inconsistent conversion performance and uneven revenue contribution across markets, devices, and traffic sources.
 Four core challenges were identified:
 
@@ -61,7 +62,8 @@ The clearest opportunity for Aventra Commerce lies in fixing the mobile experien
 Dataset: Sourced from Kaggle — comprising four relational tables: user clicks, conversions, product information, and user behaviour.
 
 
-🗂 Data Model — ERD Diagram
+**🗂 Data Model — ERD Diagram**
+
 The data model connects four core tables: 
 - User clicks, 
 - Conversions
@@ -75,6 +77,7 @@ These tables were joined via user_id, click_id, and a composite key of product_a
 
 
 **📊 Dashboard Overview & Key Insights**
+
 Four Power BI dashboards were developed, each tailored to a specific stakeholder audience.
 
 1. Executive Performance Dashboard
@@ -84,6 +87,7 @@ Surfaces top-line revenue metrics, the top 10 products by commission, market-lev
 <img width="940" height="529" alt="image" src="https://github.com/user-attachments/assets/93957e60-9b42-40a8-8cc1-b78bcc702294" />
 
 Key Insight
+
 - Canada and the US together account for the majority of affiliate revenue. 
 - However, Germany's AOV of $259 — the highest across all markets — signals strong monetisation potential if traffic volume is increased.
 - The UK, by contrast, shows the lowest AOV ($193), suggesting price sensitivity that could be addressed through targeted promotions.
@@ -95,6 +99,7 @@ Visualises the customer journey across funnel stages, traffic source conversion 
 <img width="940" height="524" alt="image" src="https://github.com/user-attachments/assets/60c68eb7-5621-4a79-ae2c-4b22d2f6f12f" />
 
 Key Insight 
+
 - Organic Search converts at 100% with an average engagement score of 8.6, making it the highest-quality traffic source.
 - Social Media is the volume leader with an 87% conversion rate.
 - Streaming platforms lag significantly at 50%, suggesting their audience is not purchase-oriented.

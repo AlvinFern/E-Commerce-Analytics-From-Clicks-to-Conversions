@@ -1,23 +1,16 @@
 # Analyzing Conversion rate performance for Affiliate E-commerce platform
 End-to-end affiliate performance analysis using MySQL and Power BI, covering revenue drivers, funnel behaviour, traffic source efficiency, and pricing strategy across five international markets.
 
-**📋 Table of Contents**
-
-Business Problem
-
-Executive Summary
-
-Tools & Software
-
-Data Model — ERD Diagram
-
-Dashboard Overview & Key Insights
-
-Recommendations
-
-Limitations & Assumptions
-
-Next Steps
+|**📋 Table of Contents**|
+|----|
+|Business Problem|
+|Executive Summary|
+|Tools & Software|
+|Data Model — ERD Diagram|
+|Dashboard Overview & Key Insights|
+|Recommendation|
+|Limitations & Assumptions|
+|Next Steps|
 
 
 **🧩 Business Problem**

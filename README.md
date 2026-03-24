@@ -74,9 +74,6 @@ These tables were joined via user_id, click_id, and a composite key of product_a
 
 
 
-
-
-
 **📊 Dashboard Overview & Key Insights**
 
 Four Power BI dashboards were developed, each tailored to a specific stakeholder audience.

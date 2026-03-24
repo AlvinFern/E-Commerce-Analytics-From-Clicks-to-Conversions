@@ -3,9 +3,13 @@ End-to-end affiliate performance analysis using MySQL and Power BI, covering rev
 
 **📋 Table of Contents**
 Business Problem
+
 Executive Summary
+
 Tools & Software
+
 Data Model — ERD Diagram
+
 Dashboard Overview & Key Insights
 Recommendations
 Limitations & Assumptions

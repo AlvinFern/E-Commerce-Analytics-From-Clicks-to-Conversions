@@ -28,7 +28,9 @@ Unclear Revenue Drivers — Which products and categories consistently generate 
 Conversion Funnel Drop-Off — Where are users disengaging, and what factors (discounts, device, user type) influence conversion?
 Traffic Source Effectiveness — Which channels attract high-intent users that actually convert?
 Device & User Experience Uncertainty — How does device type and geography affect engagement and purchase completion?
-Customer Value & Retention — Do new or returning users deliver more long-term commission value?\
+Customer Value & Retention — Do new or returning users deliver more long-term commission value?
+
+ 
 
 **📝 Executive Summary**
 
@@ -49,8 +51,6 @@ The clearest opportunity for Aventra Commerce lies in fixing the mobile experien
 Dataset: Sourced from Kaggle — comprising four relational tables: user clicks, conversions, product information, and user behaviour.
 
 
-\ 
-
 🗂 Data Model — ERD Diagram
 The data model connects four core tables: 
 - User clicks, 
@@ -62,7 +62,7 @@ These tables were joined via user_id, click_id, and a composite key of product_a
 
 <img width="940" height="638" alt="image" src="https://github.com/user-attachments/assets/c9713a6f-cf32-42ec-868e-16488beeb47d" />
 
-\
+
 
 **📊 Dashboard Overview & Key Insights**
 Four Power BI dashboards were developed, each tailored to a specific stakeholder audience.
@@ -111,7 +111,6 @@ Key Insight:
 - The Dyson V8 Cordless Vacuum stands out as both a top-seller and a high-commission product, making it the strongest candidate for continued promotion.
 - Furniture has a high AOV (~$1,000) but low sales volume — a pricing incentive could unlock significant commission upside in this category.
 
-\ 
 
 **✅ Recommendations**
 1. Fix the Mobile Conversion Gap
@@ -129,7 +128,6 @@ Apply 10–20% discounts as the default promotional approach to optimise commiss
 7. Double Down on Returning Customers
 Returning users generate a higher average commission ($5.3) than new users ($4.9). Email and retargeting campaigns targeting past converters — especially with personalised product recommendations — are likely to yield a strong return. Pair these with moderate loyalty incentives to drive repeat behaviour.
 
-\
 
 **⚠️ Limitations & Assumptions**
 
@@ -152,7 +150,6 @@ Assumptions
 - Discount percentages are assumed to directly influence conversion behaviour, with no adjustment for unobserved variables (e.g., brand preference, external demand).
 - Behaviour patterns observed across devices and traffic sources are assumed to be representative, given the limited data window.
 
-\ 
 
 **🔭 Next Steps**
 

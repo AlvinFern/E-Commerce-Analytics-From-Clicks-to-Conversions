@@ -2,6 +2,7 @@
 End-to-end affiliate performance analysis using MySQL and Power BI, covering revenue drivers, funnel behaviour, traffic source efficiency, and pricing strategy across five international markets.
 
 **📋 Table of Contents**
+
 Business Problem
 
 Executive Summary

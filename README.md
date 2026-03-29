@@ -14,8 +14,7 @@ End-to-end affiliate performance analysis using MySQL and Power BI, covering rev
 
   
 
-# |**📋 Table of Contents**|
-
+|**📋 Table of Contents**|
 |----|
 
 |Business Problem|

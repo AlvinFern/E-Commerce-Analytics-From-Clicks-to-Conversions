@@ -4,13 +4,18 @@ End-to-end affiliate performance analysis using MySQL and Power BI, covering rev
 **Included in the repository:**
 
   ● Word Documentation of the analysis 
+  
   ● PowerPoint Presentation of the Insighs and Recommendations
+  
   ● SQL Queries
+  
   ● Power BI Dashboards 
+
 
   
 
 # |**📋 Table of Contents**|
+
 |----|
 |Business Problem|
 |Executive Summary|

@@ -10,11 +10,11 @@ End-to-end affiliate performance analysis using MySQL and Power BI, covering rev
   ● SQL Queries
   
   ● Power BI Dashboards 
-
-
+  
+  
   
 
-|# **📋 Table of Contents**|
+|**📋 Table of Contents**|
 |----|
 |Business Problem|
 |Executive Summary|

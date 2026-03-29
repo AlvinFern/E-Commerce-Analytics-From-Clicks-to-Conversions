@@ -1,7 +1,16 @@
 # Analyzing Conversion rate performance for Affiliate E-commerce platform
 End-to-end affiliate performance analysis using MySQL and Power BI, covering revenue drivers, funnel behaviour, traffic source efficiency, and pricing strategy across five international markets.
 
-|**📋 Table of Contents**|
+**Included in the repository:**
+
+  ● Word Documentation of the analysis 
+  ● PowerPoint Presentation of the Insighs and Recommendations
+  ● SQL Queries
+  ● Power BI Dashboards 
+
+  
+
+# |**📋 Table of Contents**|
 |----|
 |Business Problem|
 |Executive Summary|
@@ -13,7 +22,7 @@ End-to-end affiliate performance analysis using MySQL and Power BI, covering rev
 |Next Steps|
 
 
-**🧩 Business Problem**
+# **🧩 Business Problem**
 
 Aventra Commerce is a mid-sized e-commerce marketplace that earns revenue through affiliate commissions across product categories including electronics, kitchen appliances, and home goods. Despite attracting meaningful traffic across social media, organic search, and referral platforms, the business was experiencing inconsistent conversion performance and uneven revenue contribution across markets, devices, and traffic sources.
 Four core challenges were identified:
@@ -37,7 +46,7 @@ Customer Value & Retention — Do new or returning users deliver more long-term 
 
  
 
-**📝 Executive Summary**
+# **📝 Executive Summary**
 
 The analysis examined Aventra Commerce's affiliate performance across markets, traffic sources, user behaviour, and pricing strategies to surface the key levers for revenue growth.
 
@@ -50,7 +59,7 @@ On pricing, moderate discounts of 10–20% generate the highest total commission
 
 The clearest opportunity for Aventra Commerce lies in fixing the mobile experience, doubling down on organic and social channels, expanding targeted marketing in Germany and Australia, and applying a disciplined discount strategy.
 
-**🛠 Tools & Software**
+# **🛠 Tools & Software**
 
 | Tools | Purpose |
 | --- | --- | 
@@ -60,7 +69,7 @@ The clearest opportunity for Aventra Commerce lies in fixing the mobile experien
 Dataset: Sourced from Kaggle — comprising four relational tables: user clicks, conversions, product information, and user behaviour.
 
 
-**🗂 Data Model — ERD Diagram**
+# **🗂 Data Model — ERD Diagram**
 
 The data model connects four core tables: 
 - User clicks, 
@@ -74,7 +83,7 @@ These tables were joined via user_id, click_id, and a composite key of product_a
 
 
 
-**📊 Dashboard Overview & Key Insights**
+# **📊 Dashboard Overview & Key Insights**
 
 Four Power BI dashboards were developed, each tailored to a specific stakeholder audience.
 
@@ -142,7 +151,7 @@ Apply 10–20% discounts as the default promotional approach to optimise commiss
 Returning users generate a higher average commission ($5.3) than new users ($4.9). Email and retargeting campaigns targeting past converters — especially with personalised product recommendations — are likely to yield a strong return. Pair these with moderate loyalty incentives to drive repeat behaviour.
 
 
-**⚠️ Limitations & Assumptions**
+# **⚠️ Limitations & Assumptions**
 
 Limitations
 
@@ -164,7 +173,7 @@ Assumptions
 - Behaviour patterns observed across devices and traffic sources are assumed to be representative, given the limited data window.
 
 
-**🔭 Next Steps**
+# **🔭 Next Steps**
 
 These are concrete, near-term actions that follow logically from the analysis findings.
 
